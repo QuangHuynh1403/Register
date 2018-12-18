@@ -1,0 +1,232 @@
+
+
+
+<?php
+include("db_connect.php");
+
+
+?>
+<html>
+	<head>
+		<title>
+		
+	</title>
+	<style>
+	.grey {
+  background-color: rgba(128,128,128,.25);
+}
+.red {
+  background-color: rgba(255,0,0,.25);
+}
+.blue {
+  background-color: rgba(0,0,255,.25);
+}
+	</style>
+	</head>
+	<body>
+		      	<form method="post" action="#" enctype='multipart/form-data'>        		
+
+		<table>
+			<colgroup>
+	<?php
+			for ($x = 0; $x <= 30; $x++) 
+			{
+				$month = date( 'm' );
+                $year = date( 'y' );
+                $date =$year.'-'.$month.'-'.$x;
+	
+	            $unixTimestamp = strtotime($date); 
+                  //Get the day of the week using PHP's date function.
+$dayOfWeek = date("l", $unixTimestamp);	
+if($dayOfWeek=='Saturday'|| $dayOfWeek=='Sunday'){$cala='red';}
+else{$cala='grey';}
+				
+		                                 echo"<col class='$cala' />";
+								   }
+    ?>
+  </colgroup>
+  <thead>
+		<tr>
+      <th>Student</th>
+      <?php
+for ($x = 1; $x <= 30; $x++) {
+		
+	$month = date( 'm' );
+   $year = date( 'y' );
+   $date =$year.'-'.$month.'-'.$x;
+	
+	$unixTimestamp = strtotime($date);
+ 
+//Get the day of the week using PHP's date function.
+$dayOfWeek = date("l", $unixTimestamp);	
+if($dayOfWeek=='Monday'){$abb='Mo';}
+if($dayOfWeek=='Thursday'){$abb='Th';}
+if($dayOfWeek=='Tuesday'){$abb='Tu';}
+if($dayOfWeek=='Wednesday'){$abb='We';}
+if($dayOfWeek=='Friday'){$abb='Fr';}
+if($dayOfWeek=='Saturday'){$abb='Sa';}
+if($dayOfWeek=='Sunday'){$abb='Sa';}
+
+    //echo "On: $x  it was on $dayOfWeek  day abbriviatio $abb <b>";
+    echo"<th>$abb</br>$x</th>";
+}
+
+?>
+      
+      
+       </thead>    
+  </tr>
+  <tbody>
+<?php  	
+$query = "SELECT * FROM tbl_students ";
+                      $result =mysqli_query($db,$query) or die('Error, query failed');
+                        if( mysqli_num_rows($result) != 0)                         
+                         {                 $count=0;
+                         	while($found = mysqli_fetch_array($result))
+                         	{
+                         		   $count=$count+1; $turns=1;;
+                         		    $fnsme= $found['Firstname'];
+									 $id= $found['id'];
+                         		  echo" <tr>
+                                       <td>$fnsme</td>";
+                         		   
+								 if($count==$turns){
+								 	
+									                   $turns=$turns+1;
+									       $x = 1; 
+							                       while ($x <= 30) {
+							       	
+									                   $month = date( 'm' );
+                                                        $year = date( 'y' );
+                                                       $date =$year.'-'.$month.'-'.$x;												
+		                                               echo"<td><input type='checkbox' name='$x' value='$date' ></td>";
+													   $x=$x+1;
+								           }
+								      }
+								 if($count==2){
+								                  	     $x = 31;
+								 	                 while ( $x <= 60) {
+							       	                           $xx=$x-30;
+									                   $month = date( 'm' );
+                                                        $year = date( 'y' );
+                                                       $date =$year.'-'.$month.'-'.$xx;												
+		                                               echo"<td><input type='checkbox' name='$x' value='$date' ></td>";
+													    $x= $x+1;
+													  }
+								                  }
+								 if($count==3){
+								                  	$x = 61;
+								 	                  while( $x <= 90) {
+							       	                          $xx=$x-60;
+									                   $month = date( 'm' );
+                                                        $year = date( 'y' );
+                                                       $date =$year.'-'.$month.'-'.$xx;												
+		                                               echo"<td><input type='checkbox' name='$x' value='$date' ></td>";
+													   $x=$x+1;
+													 }
+								                  }
+								  if($count==4){
+								                  	        $x=91;
+								 	                  while ($x <= 120) {
+							       	                           $xx=$x-90;
+									                   $month = date( 'm' );
+                                                        $year = date( 'y' );
+                                                       $date =$year.'-'.$month.'-'.$xx;												
+		                                               echo"<td><input type='checkbox' name='$x' value='$date' ></td>";
+													   $x=$x+1;
+													  }
+								                  }
+								  
+								 
+								 
+								
+								 
+								          echo"</tr>";
+					        }
+					      }
+					        ?>
+		<td><input type='hidden' name='days' value='30' >
+		<td><input type='hidden' name='students' value='<?php echo$count;?>' >
+
+  </tbody>
+</table>
+<td><input type='submit' name='submit' value='sends' >
+      	</form>  
+  <?php    	
+  if(isset($_POST['submit'])){
+  				  	  				 // echo$days = mysqli_real_escape_string($db,$_POST["1"]);      //days variable
+					
+  				  $days = mysqli_real_escape_string($db,$_POST["days"]);      //days variable
+  				   $students = mysqli_real_escape_string($db,$_POST["students"]);      //days variable
+  				  
+  	//for ($x = 1; $x <=4; $x++) {     //this loops thru each of the student in a class
+  				  
+  				  $query = "SELECT * FROM tbl_students ";
+                      $result =mysqli_query($db,$query) or die('Error, query failed');
+                        if( mysqli_num_rows($result) != 0)                         
+                         {              $counted=0;   
+                          while($found = mysqli_fetch_array($result))
+                         {                  $counted=$counted+1;       		   
+                         		    $studentid= $found['id'];
+									 // $school= $found['School'];
+									 // $std= $found['Standard'];
+									 if($counted==1){						
+								   	  //$xx=0;
+							for ($xx = 1; $xx <= $days; $xx++) {
+  				  	  	//this loops days checked after post
+  				  	  				   // //$number = mysqli_real_escape_string($db,$_POST[$xx]);      //days variable
+  				  	  				 
+// 										
+  				  	  				   if(!empty($_POST[$xx])){$date=$_POST[$xx];$att="Yes";
+									                echo$studentid.' '.$date.'<br>';
+									   	 }    						   
+									   	
+									   	}
+						                    }
+					if($counted==2){
+						             	for ($xx = 31; $xx <= 61; $xx++) {
+						 	   	  //this loops days checked after post
+  				  	  				   // //$number = mysqli_real_escape_string($db,$_POST[$xx]);      //days variable
+  				  	  				   
+// 										
+  				  	  				   if(!empty($_POST[$xx])){$date=$_POST[$xx];$att="Yes";
+									                echo$studentid.' '.$date.'<br>';
+									   	 }    						   
+										}
+									   	}
+						 if($counted==3){
+						 	   	       for ($xx = 61; $xx <= 91; $xx++) { 
+						
+// 										
+  				  	  				   if(!empty($_POST[$xx])){$date=$_POST[$xx];$att="Yes";
+									                echo$studentid.' '.$date.'<br>';
+									   	 }    						   
+									   }
+									   	}
+						 if($counted==4){
+						 	for ($xx = 91; $xx <= 121; $xx++) {
+						 	   	 //this loops days checked after post
+  				  	  				   // //$number = mysqli_real_escape_string($db,$_POST[$xx]);      //days variable
+  				  	  				  
+// 										
+  				  	  				   if(!empty($_POST[$xx])){$date=$_POST[$xx];$att="Yes";
+									                echo$studentid.' '.$date.'<br>';
+									   	 }    						   
+									   	
+									   	}
+					                }
+					}
+  				  	  			}	   
+									   
+									   }
+	 
+
+					
+  				  
+	
+  
+	                    
+    ?>  		
+
+</body>
+</html>
